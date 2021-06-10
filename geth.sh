@@ -13,30 +13,8 @@ echo "#=================================================
 readonly GREEN='\e[92m'
 readonly NONE='\e[0m'
 
-urlstatus=$(curl -fs -m 5 -IL google.com|grep 200)
-if [ "$urlstatus" == "" ];then
-  echo -e "因无法访问Google，判断您为境内网络，推荐使用同步模式fast"
-  while :; do
-    read -erp "请问您需要使用吗？输入N则使用light模式。[Y/n] " input
-    [[ -z $input ]] && input="y"
-    case $input in
-      [yY][eE][sS]|[yY])
-        syncmode=fast
-        break
-        ;;
-      [nN][oO]|[nN])
-        syncmode=light
-        break
-        ;;
-      *)
-        echo "Invalid input..."
-        ;;
-    esac
-  done
-else
-  echo "syncmode use fast"
-  syncmode=light
-fi
+read -erp "请输入您想使用的网络模式("fast", "full", "snap" 或 "light") (默认: fast)" syncmode
+[[ -z $syncmode ]] && readonly syncmode=fast
 
 read -erp "请输入自定义数据目录（默认$HOME/Goerli）:" geth_date
 [[ -z $geth_data ]] && readonly geth_date=$HOME/Goerli
