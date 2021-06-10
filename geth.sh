@@ -13,6 +13,15 @@ echo "#=================================================
 readonly GREEN='\e[92m'
 readonly NONE='\e[0m'
 
+urlstatus=$(curl -fs -m 5 -IL google.com|grep 200)
+if [ "$urlstatus" == "" ];then
+	echo "syncmode use fast"
+  syncmode=fast
+else
+  echo "syncmode use fast"
+  syncmode=light
+fi
+
 read -erp "请输入自定义数据目录（默认$HOME/Goerli）:" geth_date
 [[ -z $geth_data ]] && readonly geth_date=$HOME/Goerli
 read -erp "请输入自定义rpc http端口（默认8545）:" geth_http_port
@@ -37,4 +46,4 @@ if [[ ! "$(docker ps -q -f name=watchtower)" ]]; then
 fi
 
 echo -e "${GREEN}Start ethereum-node${NONE}"
-docker run -d --name geth-node --restart unless-stopped -v $geth_date:/root/.ethereum -p $geth_http_port:8545 -p $geth_ws_port:8546 -p 30303:30303 -p 30303:30303/udp ethereum/client-go --http --http.addr=0.0.0.0 --http.port=$geth_http_port --ws --ws.addr=0.0.0.0 --ws.port=$geth_ws_port --goerli --syncmode "light"
+docker run -d --name geth-node --restart unless-stopped -v $geth_date:/root/.ethereum -p $geth_http_port:8545 -p $geth_ws_port:8546 -p 30303:30303 -p 30303:30303/udp ethereum/client-go --http --http.addr=0.0.0.0 --http.port=$geth_http_port --ws --ws.addr=0.0.0.0 --ws.port=$geth_ws_port --goerli --syncmode "$syncmode"
