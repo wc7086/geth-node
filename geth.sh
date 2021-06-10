@@ -37,4 +37,4 @@ if [[ ! "$(docker ps -q -f name=watchtower)" ]]; then
 fi
 
 echo -e "${GREEN}Start ethereum-node${NONE}"
-docker run -d --name geth-node --restart unless-stopped -v $geth_date:/root -p $geth_http_port:8545 -p $geth_ws_port:8546 -p 30303:30303 -p 30303:30303/udp ethereum/client-go --http --http.addr=0.0.0.0 --http.port=$geth_http_port --ws --ws.addr=0.0.0.0 --ws.port=$geth_ws_port
+docker run -d --name geth-node --restart unless-stopped -v $geth_date:/root/.ethereum -p $geth_http_port:8545 -p $geth_ws_port:8546 -p 30303:30303 -p 30303:30303/udp ethereum/client-go --http --http.addr=0.0.0.0 --http.port=$geth_http_port --ws --ws.addr=0.0.0.0 --ws.port=$geth_ws_port
